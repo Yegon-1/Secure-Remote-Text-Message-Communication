@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Secure Remote Text Message Communication</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Secure Remote Text Message Communication</h1>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-info" role="alert">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <div class="mt-4">
+            <h4>Encrypt a Message</h4>
+            <form method="post" action="/encrypt">
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <input type="text" class="form-control" id="message" name="message" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Recipient's Phone Number</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Encrypt & Send OTP</button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <h4>Decrypt a Message</h4>
+            <form method="post" action="/decrypt">
+                <div class="form-group">
+                    <label for="encrypted_message">Encrypted Message</label>
+                    <input type="text" class="form-control" id="encrypted_message" name="encrypted_message" required>
+                </div>
+                <div class="form-group">
+                    <label for="otp">OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Your Phone Number</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Decrypt</button>
+            </form>
+        </div>
+        {% if encrypted_message %}
+        <div class="mt-4">
+            <h4>Encrypted Message:</h4>
+            <p class="text-monospace">{{ encrypted_message }}</p>
+        </div>
+        {% endif %}
+        {% if decrypted_message %}
+        <div class="mt-4">
+            <h4>Decrypted Message:</h4>
+            <p class="text-monospace">{{ decrypted_message }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
