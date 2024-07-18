@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Secure Remote Text Message Communication</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Secure Remote Text Message Communication</h1>
+        <div class="alert alert-info" role="alert">
+            This application allows you to send encrypted messages to a recipient's phone number. The recipient will receive a Special Code to decrypt the message.
+        </div>
+        <div class="mt-4">
+            <h4>Encrypt a Message</h4>
+            <form id="encryptForm">
+                <div class="form-group">
+                    <label for="message">Enter Message</label>
+                    <input type="text" class="form-control" id="message" name="message" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Recipient's Phone Number</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="+254123456789" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Encrypt & Send OTP</button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <h4>Decrypt a Message</h4>
+            <form id="decryptForm" method="POST">
+                <div class="form-group">
+                    <label for="encrypted_message">Encrypted Message</label>
+                    <input type="text" class="form-control" id="encrypted_message" name="encrypted_message" required>
+                </div>
+                <div class="form-group">
+                    <label for="specialCode">Special Code</label>
+                    <input type="text" class="form-control" id="specialCode" name="specialCode" placeholder="Enter Special Code" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Decrypt</button>
+            </form>
+        </div>
+        <div class="mt-4">
+            <h4>Status:</h4>
+            <p id="status" class="text-monospace"></p>
+        </div>
+        <div class="mt-4">
+            <h4>Decrypted Message:</h4>
+            <p id="decryptedMessage" class="text-monospace"></p>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('encryptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = document.getElementById('message').value;
+            const phoneNumber = document.getElementById('phone_number').value;
+
+            fetch('/encrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message, phone_number: phoneNumber }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').innerText = data.status;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('decryptForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const encryptedMessage = document.getElementById('encrypted_message').value;
+            const specialCode = document.getElementById('specialCode').value;
+
+            fetch('/decrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ encryptedMessage, specialCode }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('status').innerText = data.status;
+                document.getElementById('decryptedMessage').innerText = data.decryptedMessage;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
